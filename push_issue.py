@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 import pymongo
 from bs4 import BeautifulSoup
-
+from push_issue import get_repos_id, connect_to_mongodb, push_issue_to_gh, CheckIfIssueExists
 
 
 
@@ -56,11 +56,15 @@ def connect_to_mongodb(url):
         return client
     except Exception as e:
         return None
-
+def CheckIfIssueExists(dabaseScanned: pymongo.database, userDict, ownDBClient: pymongo.MongoClient):
+    pass
+    
+    
 def push_issue_to_gh(userDict, dabaseScanned: pymongo.database, currentSession: requests.sessions): 
 
-
-    data = "------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"text\"\r\n\r\nTEst#2 \r\n\r\n#1 \r\n\r\n\r\n# PLAY IT SAFE\r\n\r\n\r\n- test\r\n- local\r\n- admin\r\n\r\n # /[link](google.ca)\r\n\r\n> [!WARNING]\r\n> your mongoDB instance is exposed \r\n\r\n\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"issue\"\r\n\r\n\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"repository\"\r\n\r\n947519875\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"project\"\r\n\r\n\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"subject_type\"\r\n\r\nIssue\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd--\r\n"
+    def db_to_string(): 
+        return "\r\n- ".join(dabaseScanned.list_database_names())    
+    data = f"------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"text\"\r\n\r\nTEst#2 \r\n\r\n#1 \r\n\r\n\r\n# PLAY IT SAFE\r\n\r\n\r\n- test\r\n- local\r\n- admin\r\n\r\n # /[link](google.ca)\r\n\r\n> [!WARNING]\r\n> your mongoDB instance is exposed \r\n\r\n\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"issue\"\r\n\r\n\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"repository\"\r\n\r\n947519875\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"project\"\r\n\r\n\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd\r\nContent-Disposition: form-data; name=\"subject_type\"\r\n\r\nIssue\r\n------geckoformboundaryb7d48b7e2f24481eab18cb4c1f2031fd--\r\n"
     currentSession.post("https://github.com:443/preview", headers=os.getenv("burp0_headers"), cookies=os.getenv('burp0_cookies'), data=data)
     
 
