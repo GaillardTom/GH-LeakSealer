@@ -8,21 +8,20 @@ import json
 import re
 import time
 import pymongo
-#Start http session
-session = requests.session()
+from push_issue import push_issue_to_gh
 
-#Load the env variables
-load_dotenv()
-global counter
-counter = 0
 
+def setup(): 
+    global session
+    session = requests.session()
+    load_dotenv()
+    global counter
+    counter = 0
+    
     
 def get_code_snippet(html): 
-    code_snippet = html.find_all('div', class_='Box-sc-g0xbh4-0 hvmjsx')
     # get all classes that contains Box-sc-g0xbh4-0 
-    # res = html.find_all('span', class_=lambda x: x and 'prc-Text-Text-0ima0' in x)
     res = html.find_all('div', class_=lambda x: x and 'Box-sc-g0xbh4-0 bmcJak' in x)
-    # res = html.find_all('td', class_='blob-code blob-code-inner')
     return res
 def getReposOwner(html):
     owner = html.find_all('a', class_='Box-sc-g0xbh4-0 ihfUTd prc-Link-Link-85e08')
@@ -42,8 +41,7 @@ def TestConnectionAndListDatabases(url):
     #Test the connection to the mongodb server and list all the databases
     #Use the pymongo library to connect to the mongodb server
     #Use the pymongo library to list all the databases
-    #Use the pymongo library to list all the collections in the databases
-    #Return the list of databases and collections
+    #Return the list of databases
     try:
         client = pymongo.MongoClient(url+"/?retryWrites=true&w=majority")
         databases = client.list_database_names()
@@ -70,7 +68,7 @@ def getResultForPage(page_number):
                     "owner": "",
                     "repos_url": "",
                     "code": "",
-                    "mongo_url": ""
+                    "mongo_url": "",
                 }  
                 code_dict['owner'] = owner.text.split('/')[0]
                 code_dict['repos_url'] = f"https://github.com/{owner['href']}"
@@ -81,21 +79,28 @@ def getResultForPage(page_number):
                     if db:
                         counter += 1
                         print(f"Counter: {counter}")
-                        print(f"Owner: {code_dict['owner']}")
+                        print(f"Owner: {code_dict['owner']}, repos: {code_dict['repos_url']}, ,connection_string: {code_dict['mongo_url']}")
                         print(f"Repos URL: {code_dict['repos_url']}")
                         for d in db: 
                             print(f"Database: {d}")
-                    else: 
-                        print(f"Failed to connect to the mongodb server: {code_dict['mongo_url']}")
-
-                # print(f"Current URL: {code_dict['repos_url']}")
-                res.append(code_dict)
+                        #Push the issue to github with the message
+                        push_issue_to_gh(code_dict, db, session)
+                    res.append(code_dict)
+                else:
+                    pass
     return res
     
 if __name__ == '__main__':
+    #Start http session
+    session = requests.session()
+    #Load the env variables
+    load_dotenv()
+    #Counter to count all valid mongodb urls that I can connect to
+    global counter
+    counter = 0
     all_results = []
     for i in range(1, 5):
         res = getResultForPage(i)
         all_results.append(res)
-    
+        
     print(f"Total results: {counter}")
