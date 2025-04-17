@@ -1,10 +1,8 @@
 import unittest
 from unittest.mock import patch
 from main import test_mongo_connection
-import dotenv
 import os
 
-dotenv.load_dotenv()
 class TestMongoConnection(unittest.TestCase):
 
     @patch('pymongo.MongoClient')
@@ -13,8 +11,9 @@ class TestMongoConnection(unittest.TestCase):
         mock_client_instance = mock_mongo_client.return_value
         mock_client_instance.list_database_names.return_value = ['db1', 'db2']
 
-        # Test with a valid MongoDB URI
-        result = test_mongo_connection(os.environ.get('MONGO_URI'))
+        # Test with a valid MongoDB URI from GitHub Actions secrets
+        mongo_uri = os.getenv('MONGO_URI')
+        result = test_mongo_connection(mongo_uri)
         if result:
             print("MongoDB connection successful:", result)
             self.assertEqual(result, ['db1', 'db2'])
