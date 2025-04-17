@@ -2,6 +2,11 @@
 
 GH-LeakSealer is a Python script designed to search for exposed MongoDB connection strings in public GitHub repositories. It identifies repositories containing MongoDB connection strings, tests their validity, and lists the databases accessible through these connections. The script can optionally raise an issue on the affected repository, but this feature is considered spammy and is disabled by default.
 
+> [!CAUTION]
+> At first I was posting issues in the corresponding repository and I had a lot of great feedback from the community helping raise security awareness but can be considered as spam by the github team.
+
+<img src="./images/scriptOutput.png">
+
 ## Features
 
 - Searches for MongoDB connection strings (`mongodb+srv://`) in public GitHub repositories.
