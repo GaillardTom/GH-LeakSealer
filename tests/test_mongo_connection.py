@@ -14,7 +14,7 @@ class TestMongoConnection(unittest.TestCase):
         mock_client_instance.list_database_names.return_value = ['db1', 'db2']
 
         # Test with a valid MongoDB URI
-        result = test_mongo_connection(os.getenv('mongo_uri'))
+        result = test_mongo_connection(os.environ.get('MONGO_URI'))
         if result:
             print("MongoDB connection successful:", result)
             self.assertEqual(result, ['db1', 'db2'])
