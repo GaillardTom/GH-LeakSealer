@@ -26,7 +26,7 @@ jobs:
 
     - name: Run tests
       env:
-        mongo_uri: ${{ secrets.MONGO_URI }}
+        MONGO_URI: ${{ secrets.MONGO_URI }}
         GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
       run: |
         python -m unittest discover -s tests -p "test_*.py"
