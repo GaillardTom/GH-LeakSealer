@@ -25,5 +25,8 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run tests
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+        GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
       run: |
         python -m unittest discover -s tests -p "test_*.py"
