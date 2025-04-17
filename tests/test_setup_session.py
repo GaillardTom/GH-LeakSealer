@@ -8,7 +8,6 @@ class TestSetupSession(unittest.TestCase):
     def test_setup_session_valid_env(self, mock_getenv):
         # Mock environment variables
         mock_getenv.side_effect = lambda key: 'valid_token' if key == 'GH_API_TOKEN' else 'mongodb+srv://valid-url'
-
         session = setup_session()
         self.assertIsNotNone(session)
 

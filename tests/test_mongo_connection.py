@@ -13,7 +13,6 @@ class TestMongoConnection(unittest.TestCase):
 
         # Test with a valid MongoDB URI from GitHub Actions secrets
         mongo_uri = os.getenv('MONGO_URI')
-        print("Mongo URI:", mongo_uri)  # Debugging line to check the Mongo URI
         if not mongo_uri:
             self.fail("MONGO_URI environment variable is not set.")
         result = test_mongo_connection(mongo_uri)
